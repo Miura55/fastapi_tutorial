@@ -1,0 +1,23 @@
+{
+    "name": "Fast API Tutorial",
+    "image": "mcr.microsoft.com/vscode/devcontainers/python:3-bullseye",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.linting.pylintEnabled": false,
+                "python.linting.flake8Enabled": true,
+                "python.linting.enabled": true,
+                "python.formatting.blackPath": "/usr/local/bin/black",
+            },
+            "extensions": [
+                "ms-python.python"
+            ]
+        }
+    },
+    "forwardPorts": [
+        8000
+    ],
+    "onCreateCommand": "pip install -r requirements.txt",
+    "remoteUser": "vscode"
+}
