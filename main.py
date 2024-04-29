@@ -14,7 +14,7 @@ async def root():
     return {"message": "Hello World"}
 
 @app.post("/entry", response_model=schemes.MessageResponse, description="掲示板にエントリーを新規追加します。")
-async def create_entry(entry: schemes.Entry):
+async def create_entry(entry: schemes.EntryRequest):
     logger.info(f"Received entry: {entry}")
     return {"message": "Entry created"}
 
