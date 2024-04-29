@@ -16,10 +16,6 @@ class EntryBase(BaseModel):
     user_name: str
 
 
-class EntryCreate(EntryBase):
-    pass
-
-
 class Entry(EntryBase):
     id: int
     created_at: str
