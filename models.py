@@ -9,4 +9,4 @@ class Entry(Base):
     title = Column(String)
     content = Column(String)
     user_name = Column(String)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, server_default='now()')
