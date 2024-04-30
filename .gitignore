@@ -1,3 +1,6 @@
 # Ignore Python files
 *.pyc
 .env
+# Ignore database files
+*.sqlite
+*.db
