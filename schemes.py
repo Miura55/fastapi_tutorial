@@ -10,14 +10,11 @@ class MessageResponse(BaseModel):
     message: str = 'This message is example'
 
 
-class EntryBase(BaseModel):
+class Entry(BaseModel):
+    id: int
     title: str
     content: str
     user_name: str
-
-
-class Entry(EntryBase):
-    id: int
     created_at: str
 
     class Config:

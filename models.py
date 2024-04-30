@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from .database import Base
+from sqlalchemy.sql import func
+from database import Base
 
 
 class Entry(Base):
@@ -9,4 +10,4 @@ class Entry(Base):
     title = Column(String)
     content = Column(String)
     user_name = Column(String)
-    created_at = Column(DateTime, server_default='now()')
+    created_at = Column(DateTime, server_default=func.now())

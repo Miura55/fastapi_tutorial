@@ -6,7 +6,7 @@ import schemes
 def get_entries(db: Session):
     return db.query(models.Entry).all()
 
-def create_entry(db: Session, entry: schemes.EntryCreate):
+def create_entry(db: Session, entry: schemes.EntryRequest):
     db_entry = models.Entry(
         title=entry.title,
         content=entry.content,
@@ -19,6 +19,8 @@ def create_entry(db: Session, entry: schemes.EntryCreate):
 
 def delete_entry(db: Session, entry_id: int):
     db_entry = db.query(models.Entry).filter(models.Entry.id == entry_id).first()
+    if db_entry is None:
+        raise AttributeError(f"Entry {entry_id} not found")
     db.delete(db_entry)
     db.commit()
     return db_entry
