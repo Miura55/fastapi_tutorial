@@ -1,10 +1,11 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 import logging
 import schemes
 import crud
 import models
 from database import SessionLocal, engine
 from sqlalchemy.orm import Session
+from fastapi.templating import Jinja2Templates
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -13,6 +14,7 @@ app = FastAPI(
     summary="このAPIはFastAPIのチュートリアルとして掲示板のAPIを提供します。",
 )
 logger = logging.getLogger('uvicorn')
+templates = Jinja2Templates(directory="templates")
 
 def get_db():
     db = SessionLocal()
@@ -22,8 +24,9 @@ def get_db():
         db.close()
 
 @app.get("/", response_model=schemes.MessageResponse, description="接続確認用のAPIです。")
-async def root():
-    return {"message": "Hello World"}
+async def root(request: Request, db: Session = Depends(get_db)):
+    entries = crud.get_entries(db)
+    return templates.TemplateResponse(request=request, name="entry.html", context={'entries': entries})
 
 @app.post("/entry", response_model=schemes.MessageResponse, description="掲示板にエントリーを新規追加します。")
 async def create_entry(entry: schemes.EntryRequest, db: Session = Depends(get_db)):
