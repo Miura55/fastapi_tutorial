@@ -34,6 +34,16 @@ async def create_entry(entry: schemes.EntryRequest, db: Session = Depends(get_db
     crud.create_entry(db, entry)
     return {"message": "Entry created"}
 
+@app.patch("/entry/{entry_id}", response_model=schemes.MessageResponse, description="IDを指定して掲示板のエントリーを更新します。")
+async def update_entry(entry_id: int, entry: schemes.EntryRequest, db: Session = Depends(get_db)):
+    try:
+        crud.update_entry(db, entry_id, entry)
+    except AttributeError:
+        logger.error(f"Entry {entry_id} not found")
+        raise HTTPException(status_code=404, detail=f"Entry {entry_id} not found")
+    logger.info(f"Entry {entry_id} updated")
+    return {"message": f"Entry {entry_id} updated"}
+
 @app.delete("/entry/{entry_id}", response_model=schemes.MessageResponse, description="IDを指定して掲示板のエントリーを削除します。")
 async def delete_entry(entry_id: int, db: Session = Depends(get_db)):
     try: 
