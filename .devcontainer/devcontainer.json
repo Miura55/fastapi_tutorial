@@ -15,9 +15,12 @@
             ]
         }
     },
+    "features": {
+        "ghcr.io/jsburckhardt/devcontainer-features/uv:1": {}
+    },
     "forwardPorts": [
         8000
     ],
-    "onCreateCommand": "pip install -r requirements.txt",
+    "onCreateCommand": "uv sync",
     "remoteUser": "vscode"
 }
