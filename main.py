@@ -46,29 +46,29 @@ async def root(request: Request, db: SessionDep):
     entries = crud.get_entries(db)
     return templates.TemplateResponse(request=request, name="entry.html", context={'entries': entries})
 
-@app.get("/entries", response_model=List[schemes.Entry], description="掲示板の全エントリーを取得します。", tags=["Entries"])
+@app.get("/entries", description="掲示板の全エントリーを取得します。", tags=["Entries"])
 async def get_entries(db: SessionDep) -> List[schemes.Entry]:
     entries = crud.get_entries(db)
-    return [schemes.Entry.model_validate(entry) for entry in entries]
+    return [schemes.Entry.model_validate(entry.model_dump()) for entry in entries]
 
-@app.post("/entries", response_model=schemes.Entry, description="掲示板にエントリーを新規追加します。", tags=["Entries"])
+@app.post("/entries", description="掲示板にエントリーを新規追加します。", tags=["Entries"])
 async def create_entry(entry: schemes.EntryRequest, db: SessionDep) -> schemes.Entry:
     logger.info(f"Received entry: {entry}")
     created_entry = crud.create_entry(db, entry)
-    return schemes.Entry.model_validate(created_entry)
+    return schemes.Entry.model_validate(created_entry.model_dump())
 
-@app.patch("/entries/{entry_id}", response_model=schemes.Entry, description="IDを指定して掲示板のエントリーを更新します。", tags=["Entries"])
-async def update_entry(entry_id: int, entry: schemes.EntryRequest, db: SessionDep):
+@app.patch("/entries/{entry_id}", description="IDを指定して掲示板のエントリーを更新します。", tags=["Entries"])
+async def update_entry(entry_id: int, entry: schemes.EntryRequest, db: SessionDep) -> schemes.Entry:
     try:
         updated_entry = crud.update_entry(db, entry_id, entry)
     except AttributeError:
         logger.error(f"Entry {entry_id} not found")
         raise HTTPException(status_code=404, detail=f"Entry {entry_id} not found")
     logger.info(f"Entry {entry_id} updated")
-    return updated_entry
+    return schemes.Entry.model_validate(updated_entry.model_dump())
 
-@app.delete("/entries/{entry_id}", response_model=schemes.MessageResponse, description="IDを指定して掲示板のエントリーを削除します。", tags=["Entries"])
-async def delete_entry(entry_id: int, db: SessionDep):
+@app.delete("/entries/{entry_id}", description="IDを指定して掲示板のエントリーを削除します。", tags=["Entries"])
+async def delete_entry(entry_id: int, db: SessionDep) -> schemes.MessageResponse:
     try:
         crud.delete_entry(db, entry_id)
     except AttributeError:
