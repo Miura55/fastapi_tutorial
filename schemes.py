@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class EntryRequest(BaseModel):
     title: str = 'Title'
@@ -10,12 +11,15 @@ class MessageResponse(BaseModel):
     message: str = 'This message is example'
 
 
+class CreateEntryResponse(BaseModel):
+    id: int
+    created_at: datetime
+
+
 class Entry(BaseModel):
     id: int
     title: str
     content: str
     user_name: str
-    created_at: str
-
-    class Config:
-        orm_mode = True
+    created_at: datetime
+    updated_at: datetime

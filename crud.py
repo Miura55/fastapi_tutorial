@@ -1,10 +1,10 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, desc
 from models import Entry
 import schemes
 
 
 def get_entries(db: Session):
-    statement = select(Entry)
+    statement = select(Entry).order_by(desc(Entry.created_at))
     return db.exec(statement).all()
 
 def create_entry(db: Session, entry: schemes.EntryRequest):
